@@ -1,0 +1,14 @@
+[
+    {
+        "name": "branch1",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test",
+        "code": "001"
+    },
+    {
+        "name": "branch2",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test2",
+        "code": "002"
+    }
+]
