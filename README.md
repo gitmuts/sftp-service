@@ -1,3 +1,3 @@
 # sftp-service
 ## Zips files
-## Connects to sftp dynamicaly servers and sends files
+## Connects to sftp dynamically servers and sends files
