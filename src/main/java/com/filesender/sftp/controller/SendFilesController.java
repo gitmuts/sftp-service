@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,19 +23,26 @@ public class SendFilesController {
 
 	
 	@RequestMapping(value = "/sendfiles", method = RequestMethod.GET)
-	public String sendFiles() {
+	public ResponseEntity<?> sendFiles() {
 		try {
 			
+			String responseMessage ="";
 			List<String> failures = sftpService.sendFiles();
 			
 			if(failures.size() > 0) {
-				logger.warn("#### Failed to connect to the servers: " + failures.toString());
+				responseMessage= "Failed to connect to the servers: " + failures.toString();
+				logger.warn("#### "+ responseMessage  +" ###");
+			}else {
+				responseMessage = "Files sent successfully to all servers";
 			}
+		
+			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 			
 		}catch(Exception e) {
 			logger.error(e.getMessage(), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return "sent";
+		
 	}
 }
