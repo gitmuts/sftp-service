@@ -10,5 +10,35 @@
         "ip": "127.0.0.1",
         "folder": "C:\\Users\\gidi\\Documents\\test2",
         "code": "002"
+    },
+    {
+        "name": "branch3",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test3",
+        "code": "003"
+    },
+    {
+        "name": "branch3",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test3",
+        "code": "004"
+    },
+    {
+        "name": "branch4",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test4",
+        "code": "005"
+    },
+    {
+        "name": "branch5",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test5",
+        "code": "006"
+    },
+    {
+        "name": "branch6",
+        "ip": "127.0.0.1",
+        "folder": "C:\\Users\\gidi\\Documents\\test6",
+        "code": "006"
     }
 ]

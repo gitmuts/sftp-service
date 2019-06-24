@@ -26,6 +26,8 @@ public class SendFilesController {
 	public ResponseEntity<?> sendFiles() {
 		try {
 			
+			long startTime = System.currentTimeMillis();
+			
 			String responseMessage ="";
 			List<String> failures = sftpService.sendFiles();
 			
@@ -36,6 +38,12 @@ public class SendFilesController {
 				responseMessage = "Files sent successfully to all servers";
 			}
 		
+			long endTime = System.currentTimeMillis();
+			
+			long seconds = (endTime - startTime) /1000;
+			
+			logger.info("Process took " + seconds);
+			
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 			
 		}catch(Exception e) {
