@@ -6,6 +6,14 @@ public class ServerInfo {
 	private String ip;
 	private String name;
 	private String code;
+	private long recordId;
+	
+	public long getRecordId() {
+		return recordId;
+	}
+	public void setRecordId(long recordId) {
+		this.recordId = recordId;
+	}
 	public String getFolderName() {
 		return folderName;
 	}

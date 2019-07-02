@@ -45,7 +45,7 @@ public class AsyncService {
 			logger.warn(String.format("Failed to send file to %s", server.getName()));
 		}
 		
-		return CompletableFuture.completedFuture(new ProcessResponse(server.getName(), sent));
+		return CompletableFuture.completedFuture(new ProcessResponse(server.getName(), sent, server.getRecordId()));
 	}
 
 	public boolean sendFile(String filePath, String serverName) {
