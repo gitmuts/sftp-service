@@ -115,6 +115,9 @@ var home = Vue.component("Home", {
                 this.loading = false
                 console.log(response)
                 this.getSentFiles();
+                this.snackbar = true
+                this.snackColor = 'success'
+                this.message = response.data
                 }).catch(err => {
                 this.loading = false
                 console.err('err', err)
@@ -153,6 +156,7 @@ var home = Vue.component("Home", {
                 this.message = response.data
                 this.snackbar = true
                 this.snackColor = 'success'
+                this.getSentFiles()
                 }).catch(err => {
                 this.loading = false
                 console.err('err', err)
