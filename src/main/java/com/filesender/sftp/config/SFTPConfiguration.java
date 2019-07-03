@@ -3,6 +3,7 @@ package com.filesender.sftp.config;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +40,8 @@ public class SFTPConfiguration {
 	
 	public static final List<ServerInfo> servers = new ArrayList<>();
 
+	
+
 	@Value("${branches_file_location}")
 	String branchesFile;
 	
@@ -67,11 +70,13 @@ public class SFTPConfiguration {
 
 		for(ServerInfo serverInfo : servers) {
 			DefaultSftpSessionFactory defaultFactory = new DefaultSftpSessionFactory(true);
+
+			
 			// factory.set
 			defaultFactory.setHost(serverInfo.getIp());
 			defaultFactory.setPort(22);
 			defaultFactory.setUser(sftpUsername);
-			defaultFactory.setPassword(sftpPassword);
+			defaultFactory.setPassword(getDecodedPassword());
 			defaultFactory.setAllowUnknownKeys(true);
 			
 			factories.put(serverInfo.getName(), defaultFactory);
@@ -105,6 +110,12 @@ public class SFTPConfiguration {
 	public interface UploadGateway {
 		@Gateway(requestChannel = "toSftpChannel")
 		void upload(File file);
+	}
+
+	private String getDecodedPassword() {
+		byte[] decodedBytes = Base64.getDecoder().decode(sftpPassword);
+		String decodedString = new String(decodedBytes);
+		return decodedString;
 	}
 
 	private List<ServerInfo> getServersFromFile() {

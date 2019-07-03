@@ -1,35 +1,27 @@
 package com.filesender.sftp.service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import com.filesender.sftp.config.SFTPConfiguration;
+import com.filesender.sftp.model.ProcessResponse;
+import com.filesender.sftp.model.ServerInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
 import org.springframework.stereotype.Service;
-
-import com.filesender.sftp.config.SFTPConfiguration;
-import com.filesender.sftp.config.SFTPConfiguration.UploadGateway;
-import com.filesender.sftp.model.ServerInfo;
-import com.jcraft.jsch.ChannelSftp.LsEntry;
 
 @Service
 public class SFTPFileService {
 
-	Logger logger = LoggerFactory.getLogger(ZipFilesService.class);
+	Logger logger = LoggerFactory.getLogger(SFTPFileService.class);
 
 	List<ServerInfo> servers = SFTPConfiguration.servers;
 
 	@Autowired
-	ZipFilesService zipService;
-
-	@Autowired
-	private UploadGateway gateway;
-
-	@Autowired
-	DelegatingSessionFactory<LsEntry> sftpSessionFactory;
+	AsyncService asyncService;
 
 	public List<String> sendFiles() {
 		
@@ -37,43 +29,33 @@ public class SFTPFileService {
 		
 		try {
 
-			for (ServerInfo server : servers) {
-				// zip files
-				String zippedFilePath = zipService.zipFilesInDirectory(server.getFolderName(), server.getCode());
+			Long startTime = System.currentTimeMillis();
 
-				// send through sftp
-				logger.info(String.format("Sending file to %s", server.getName()));
-				boolean sent = sendFile(zippedFilePath, server.getName());
-				if (sent) {
-					logger.info(String.format("File sent successfully to %s", server.getName()));
-				} else {
-					logger.warn(String.format("Failed to send file to %s", server.getName()));
-					failures.add(server.getName());
+			List<CompletableFuture<ProcessResponse>> responses = new ArrayList<>();
+
+			for (ServerInfo server : servers) {
+				CompletableFuture<ProcessResponse>  response = asyncService.zipAndSendFile(server);
+				responses.add(response);
+			}
+
+			
+			CompletableFuture.allOf(responses.toArray(new CompletableFuture[responses.size()])).join();
+			
+			for(CompletableFuture<ProcessResponse> receivedResponse : responses) {
+				
+				if(!receivedResponse.get().isSent()) {
+					failures.add(receivedResponse.get().getServerName());
 				}
 			}
+			
+			long endTime = System.currentTimeMillis();
+
+			logger.info(String.format("SFTP process has completed in %s  seconds" , (endTime- startTime)/ 1000));
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 		
 		return failures;
-	}
-
-	public boolean sendFile(String filePath, String serverName) {
-		try {
-			sftpSessionFactory.setThreadKey(serverName);
-			File file = new File(filePath);
-			if (file.exists()) {
-				gateway.upload(file);
-				return true;
-			} else {
-				logger.warn(String.format("%s does not exist", filePath));
-				return false;
-			}
-		} catch (Exception e) {
-			logger.error(String.format("Error occurred while sending file for %s, detailed error is %s", serverName,
-					e.getMessage()));
-			return false;
-		}
 	}
 }
