@@ -21,13 +21,20 @@ public class ZipFilesService {
 		try {
 
 			List<String> filesToBeZipped = scanDirectory(directory);
+			String zipFileName = "mcf" + code + ".zip";
 			
 			if (filesToBeZipped.size() == 0) {
-				logger.info(String.format("No files were found for zipping in %s", directory));
-				return "";
+				logger.info(String.format("No files were found for zipping in %s, checking if file is zipped", directory));
+				
+				File zippedFile = new File(directory + "/" + zipFileName);
+				if(!zippedFile.exists()) {
+					logger.info(String.format("%s not found in %s", zippedFile, directory));
+					return "";
+				}
+				
 			}
 
-			String zipFileName = "mcf" + code + ".zip";
+			
 			FileOutputStream fos = new FileOutputStream(directory + "/" + zipFileName);
 			ZipOutputStream zipOut = new ZipOutputStream(fos);
 			for (String srcFile : filesToBeZipped) {
