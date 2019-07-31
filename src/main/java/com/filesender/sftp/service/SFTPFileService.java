@@ -18,14 +18,13 @@ public class SFTPFileService {
 
 	Logger logger = LoggerFactory.getLogger(SFTPFileService.class);
 
-	
-
 	@Autowired
 	AsyncService asyncService;
-	
+
+
 	@Autowired
 	DatabaseService databaseService;
-
+	
 	public List<String> sendFiles(List<ServerInfo> servers) {
 		
 		List<String> failures = new ArrayList<>();
@@ -46,30 +45,18 @@ public class SFTPFileService {
 				server.setRecordId(recordId);
 				
 				CompletableFuture<ProcessResponse>  response = asyncService.zipAndSendFile(server);
+				
 				responses.add(response);
 			}
 
 			
 			CompletableFuture.allOf(responses.toArray(new CompletableFuture[responses.size()])).join();
 			
-			for(CompletableFuture<ProcessResponse> receivedResponse : responses) {
-				
-				FileUploadRecord record = new FileUploadRecord();
-				
-				if(!receivedResponse.get().isSent()) {
-					record.setDesc("Failed to send file");
-					record.setStatus(FileUploadRecord.Status.FAILED);
-					failures.add(receivedResponse.get().getServerName());
-				} else {
-					record.setStatus(FileUploadRecord.Status.SUCCESS);
-					record.setDesc("Sent successfully");
-				}
-				
-				databaseService.updateFileUploadRecord(receivedResponse.get().getRecordId(), record);
-				
-			}
-			
-			logger.info("FTP process has completed");
+			long endTime = System.currentTimeMillis();
+
+			long minutes = (endTime - startTime) / 60000;
+
+			logger.info("FTP process has completed in {} seconds", minutes);
 			
 			
 		} catch (Exception e) {

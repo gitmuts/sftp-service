@@ -39,6 +39,7 @@ var home = Vue.component("Home", {
             <template v-slot:items="props">
                 <td>{{ props.item.id }}</td>
                 <td>{{ props.item.branch }}</td>
+                <td>{{ props.item.fileSize }}</td>
                 <td :class="props.item.status === 'FAILED' ? 'error--text': ''">{{ props.item.status }}</td>
                 <td>{{ props.item.desc }}</td>
                 <td>{{ props.item.createdAt }}</td>
@@ -48,6 +49,11 @@ var home = Vue.component("Home", {
                 </td>
             </template>
             </v-data-table>
+          </v-flex>
+          <v-flex xs12 mt-5>
+          <p> </p>
+           <v-spacer> </v-spacer>
+           <v-btn color="primary" @click="showTruncateDialog"> Archive Records </v-btn>
           </v-flex>
           <v-dialog v-model="dialog" persistent max-width="400">
                 <v-card>
@@ -75,6 +81,19 @@ var home = Vue.component("Home", {
                 </v-card-actions>
                 </v-card>
          </v-dialog>
+         <v-dialog v-model="truncateDialog" persistent max-width="500">
+                <v-card>
+                <v-card-title class="headline">Confirm Truncate Records Table</v-card-title>
+                <v-card-text>
+                 Delete All records ?
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn  flat class="#00513B--text" @click="truncateDialog = false">Cancel</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="#7BC243" class="white--text" @click="truncateTable">Confirm</v-btn>
+                </v-card-actions>
+                </v-card>
+         </v-dialog>
        </v-layout>
      </div>`,
     data() {
@@ -82,6 +101,7 @@ var home = Vue.component("Home", {
         headers: [
             { text: 'Id', value: 'id'},
             { text: 'Branch', value: 'branch' },
+            { text: 'Size(MB)', value: 'fileSize' },
             { text: 'Status', value: 'status' },
             { text: 'Desc', value: 'desc' },
             { text: 'Created At', value: 'createdAt' },
@@ -97,13 +117,17 @@ var home = Vue.component("Home", {
           message: '',
           timeout: 6000,
           loading: false,
-          sendFilesDialog: false
+          sendFilesDialog: false,
+          truncateDialog: false
       };
     },
     mounted () {
         this.getSentFiles();
     },
     methods: {
+        showTruncateDialog () {
+            this.truncateDialog = true
+        },
         sendFiles () {
             this.loading = true;
             this.sendFilesDialog = false
@@ -135,6 +159,22 @@ var home = Vue.component("Home", {
                 console.err('err', err)
                 })
         },
+        truncateTable () {
+            this.truncateDialog = false;
+            let endpoint="/truncatetable";
+            axios({
+                method: 'get',
+                url: endpoint,
+                }).then(response => {
+                console.log(response)
+                this.getSentFiles()
+                }).catch(err => {
+                console.err('err', err)
+                this.message = err
+                this.snackbar = true
+                this.snackColor = 'error'
+                })
+        },
         confirmDialog (item) {
             this.record = item
             this.dialog = true
@@ -163,6 +203,7 @@ var home = Vue.component("Home", {
                 this.message = 'File not resend, check logs'
                 this.snackbar = true
                 this.snackColor = 'error'
+                this.getSentFiles()
                 })
         }
     }

@@ -8,11 +8,20 @@ public class FileUploadRecord {
 	
 	private long id;
 	private String branch;
+	private long fileSize;
 	private Status status;
 	private String desc;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 	
+
+	public long getFileSize() {
+		return this.fileSize;
+	}
+
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
+	}
 	
 	
 	public long getId() {

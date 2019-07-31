@@ -1,6 +1,10 @@
 package com.filesender.sftp;
 
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +23,15 @@ public class SftpApplication {
 		SpringApplication.run(SftpApplication.class, args);
 	}
 
+    @PostConstruct
+    public void init() {
+
+        System.out.println("Date : " + new Date().toString());
+
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC+3"));
+
+        System.out.println("Date in UTC: " + new Date().toString());
+    }
 
 	@Bean
     public Executor taskExecutor() {

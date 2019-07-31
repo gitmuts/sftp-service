@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.filesender.sftp.config.SFTPConfiguration;
 import com.filesender.sftp.model.FileUploadRecord;
 import com.filesender.sftp.model.ServerInfo;
+import com.filesender.sftp.service.ArchivalService;
 import com.filesender.sftp.service.DatabaseService;
 import com.filesender.sftp.service.SFTPFileService;
 
@@ -31,6 +32,9 @@ public class SendFilesController {
 	
 	@Autowired
 	DatabaseService databaseService;
+
+	@Autowired
+	ArchivalService archivalService;
 	
 	@RequestMapping(value = "/sendfiles", method = RequestMethod.GET)
 	public ResponseEntity<?> sendFiles() {
@@ -52,7 +56,7 @@ public class SendFilesController {
 			
 			long seconds = (endTime - startTime) /1000;
 			
-			logger.info("Process took " + seconds);
+			logger.info("Process took {} seconds" , seconds);
 			
 			return new ResponseEntity<>(responseMessage, HttpStatus.OK);
 			
@@ -71,6 +75,22 @@ public class SendFilesController {
 			List<FileUploadRecord> records = databaseService.getSentFiles();
 			
 			return new ResponseEntity<>(records, HttpStatus.OK);
+			
+		}catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/truncatetable", method = RequestMethod.GET)
+	public ResponseEntity<?> truncateFileUpload() {
+		try {
+			
+			List<FileUploadRecord> records = databaseService.getSentFiles();
+			
+			archivalService.archiveFileUploadRecords(records);
+
+			return new ResponseEntity<>("Files archived", HttpStatus.OK);
 			
 		}catch(Exception e) {
 			logger.error(e.getMessage(), e);

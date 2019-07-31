@@ -40,7 +40,7 @@ public class DatabaseService {
 		    jdbcTemplate.update(connection -> {
 		        PreparedStatement ps = connection
 		          .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		          ps.setString(1, record.getBranch());
+				  ps.setString(1, record.getBranch());
 		          ps.setString(2, record.getStatus().toString());
 		          ps.setString(3, record.getDesc());
 		          ps.setTimestamp(4, now);
@@ -53,12 +53,49 @@ public class DatabaseService {
 			return 0;
 		}
 	}
+
+	
+	public long createFileUpoadRecordArchive(FileUploadRecord record) {
+		try {
+			String sql ="INSERT INTO file_upload_archive(branch, status, desc, created_at, updated_at, file_size) VALUES(?, ?, ?, ?, ?, ?)";
+			
+		    KeyHolder keyHolder = new GeneratedKeyHolder();
+		    
+		    jdbcTemplate.update(connection -> {
+		        PreparedStatement ps = connection
+		          .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				  ps.setString(1, record.getBranch());
+		          ps.setString(2, record.getStatus().toString());
+		          ps.setString(3, record.getDesc());
+				  ps.setTimestamp(4, record.getCreatedAt());
+				  ps.setTimestamp(5, record.getUpdatedAt());
+				  ps.setLong(6, record.getFileSize());
+		          return ps;
+		        }, keyHolder);
+		 
+		        return (long) keyHolder.getKey();
+		}catch(Exception e ) {
+			logger.error(e.getMessage(), e);
+			return 0;
+		}
+	}
+
+	public boolean deleteFileUploadRecord(long recordId){
+		try{
+			String sql= "DELETE FROM file_upload where id =?";
+			jdbcTemplate.update(sql, recordId);
+			return true;
+		}catch(Exception e){
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
 	
 	public boolean updateFileUploadRecord(long recordId, FileUploadRecord record) {
 		try {
 			Timestamp now = new Timestamp(new Date().getTime());
-			String sql = "UPDATE file_upload set status=?, desc=?, updated_at=? where id=?";
-			int no = jdbcTemplate.update(sql, record.getStatus().toString(), record.getDesc(), now, recordId);
+			String sql = "UPDATE file_upload set file_size=?, status=?, desc=?, updated_at=? where id=?";
+			int no = jdbcTemplate.update(sql, record.getFileSize(), record.getStatus().toString(), record.getDesc(), now, recordId);
 			
 			if(no> 0) {
 				return true;
@@ -90,7 +127,8 @@ public class DatabaseService {
 	    public FileUploadRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
 	    	FileUploadRecord record = new FileUploadRecord();
 	    	record.setId(rs.getLong("id"));
-	    	record.setBranch(rs.getString("branch"));
+			record.setBranch(rs.getString("branch"));
+			record.setFileSize(rs.getLong("file_size"));
 	    	record.setDesc(rs.getString("desc"));
 	    	record.setStatus(FileUploadRecord.Status.valueOf(rs.getString("status")));
 	    	record.setCreatedAt(rs.getTimestamp("created_at"));
