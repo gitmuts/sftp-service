@@ -30,7 +30,7 @@
     </layout>
   </appender>
   
-  <logger name="com.filesender.sftp" level="INFO" />
+  <logger name="com.filesender.bpowersftp" level="DEBUG" />
   <logger name="com.jcraft.jsch" level="ERROR" />
   <logger name="o.s.i.s.s.DefaultSftpSessionFactory" level="ERROR" />
 

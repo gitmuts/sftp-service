@@ -1,80 +1,121 @@
 [
     {
         "name": "branch1",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b1",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b1",
         "code": "001"
     },
     {
         "name": "branch2",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b2",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b2",
         "code": "002"
     },
     {
         "name": "branch3",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b3",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b3",
         "code": "003"
-    },{
+    },
+    {
         "name": "branch4",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b4",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b4",
         "code": "004"
     },
     {
         "name": "branch5",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b5",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b5",
         "code": "005"
     },
     {
         "name": "branch6",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b6",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b6",
         "code": "006"
     },
     {
         "name": "branch7",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b7",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b7",
         "code": "007"
     },
     {
         "name": "branch8",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b8",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b8",
         "code": "008"
     },
     {
         "name": "branch9",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b9",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b9",
         "code": "009"
     },
     {
         "name": "branch10",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b10",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b10",
         "code": "010"
     },
     {
         "name": "branch11",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b11",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b11",
         "code": "011"
     },
     {
         "name": "branch12",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b12",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b12",
         "code": "012"
     },
     {
         "name": "branch13",
-        "ip": "192.168.0.28",
-        "folder": "C:\\Users\\gkipkemoi\\Documents\\sftptest\\b13",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b13",
         "code": "013"
+    },
+    {
+        "name": "branch14",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b14",
+        "code": "014"
+    },
+    {
+        "name": "branch15",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b15",
+        "code": "015"
+    },
+    {
+        "name": "branch16",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b16",
+        "code": "016"
+    },
+    {
+        "name": "branch17",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b17",
+        "code": "017"
+    },{
+        "name": "branch18",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b18",
+        "code": "018"
+    },
+    {
+        "name": "branch19",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b19",
+        "code": "019"
+    },
+    {
+        "name": "branch20",
+        "ip": "172.16.20.113",
+        "folder": "D:\\Documents\\sftptest\\b20",
+        "code": "020"
     }
-
 ]

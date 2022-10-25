@@ -10,7 +10,8 @@ var home = Vue.component("Home", {
        <v-flex xs12>
         <v-card-actions>
             <v-spacer> </v-spacer>
-            <v-btn color="primary" @click="openSendFilesDialog"> Send Files </v-btn>
+            <v-btn color="primary" @click="showSpecificBranchDialog"> Send To Specific Branch </v-btn>
+            <v-btn color="primary" @click="openSendFilesDialog"> Send To All Branches </v-btn>
         </v-card-actions>
        </v-flex>
        <v-flex xs12>
@@ -94,6 +95,31 @@ var home = Vue.component("Home", {
                 </v-card-actions>
                 </v-card>
          </v-dialog>
+         <v-dialog v-model="specificBranchDialog" persistent max-width="500">
+                <v-card>
+                <v-card-title class="headline">Confirm Send Files</v-card-title>
+                <v-card-text>
+                <v-form ref="form" v-model="valid" lazy-validation>
+                    <v-flex xs6>
+                        <v-autocomplete name="Branch"
+                        v-model="branchCode"
+                        :items="branches"
+                        item-text="name"
+                        item-value='code'
+                        label="Branch Name"
+                        required>
+                        >
+                        </v-autocomplete>
+                    </v-flex>
+                </v-form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn  flat class="#00513B--text" @click="closeSpecificBranchDialog">Cancel</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="#7BC243" class="white--text" @click="sendSpecificBranch">Send</v-btn>
+                </v-card-actions>
+                </v-card>
+         </v-dialog>
        </v-layout>
      </div>`,
     data() {
@@ -118,13 +144,25 @@ var home = Vue.component("Home", {
           timeout: 6000,
           loading: false,
           sendFilesDialog: false,
-          truncateDialog: false
+          truncateDialog: false,
+          valid: true,
+          specificBranchDialog: false,
+          branchCode: '',
+          branches: []
       };
     },
     mounted () {
         this.getSentFiles();
+        this.getBranches();
     },
     methods: {
+        closeSpecificBranchDialog () {
+            this.specificBranchDialog = false;
+            this.branchCode = '';
+        },
+        showSpecificBranchDialog () {
+            this.specificBranchDialog = true;
+        },
         showTruncateDialog () {
             this.truncateDialog = true
         },
@@ -155,6 +193,18 @@ var home = Vue.component("Home", {
                 }).then(response => {
                 console.log(response)
                 this.items = response.data
+                }).catch(err => {
+                console.err('err', err)
+                })
+        },
+        getBranches () {
+            let endpoint="/getbranches";
+            axios({
+                method: 'get',
+                url: endpoint,
+                }).then(response => {
+                console.log(response)
+                this.branches = response.data
                 }).catch(err => {
                 console.err('err', err)
                 })
@@ -204,6 +254,31 @@ var home = Vue.component("Home", {
                 this.snackbar = true
                 this.snackColor = 'error'
                 this.getSentFiles()
+                })
+        },
+        sendSpecificBranch () {
+            this.dialog = false
+            this.loading = true
+            let endpoint="/sendtobranch?code=" + this.branchCode;
+            axios({
+                method: 'get',
+                url: endpoint,
+                }).then(response => {
+                this.loading = false
+                console.log(response)
+                this.message = response.data
+                this.snackbar = true
+                this.snackColor = 'success'
+                this.getSentFiles()
+                this.closeSpecificBranchDialog();
+                }).catch(err => {
+                this.loading = false
+                console.err('err', err)
+                this.message = 'File not sent, check logs'
+                this.snackbar = true
+                this.snackColor = 'error'
+                this.getSentFiles()
+                this.closeSpecificBranchDialog();
                 })
         }
     }
